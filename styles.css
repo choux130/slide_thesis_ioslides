@@ -1,0 +1,19 @@
+#font-color {
+   color: #1a1a1a;
+   letter-spacing: 0px;
+   line-height: 1.5;
+}
+
+h2{
+  color: #7a0019;
+  text-decoration: underline;
+}
+
+slides > slide.title-slide hgroup h1 {
+  color: #7a0019;
+  font-size: 60px;
+}
+
+#iframe{
+  height:80;
+}
