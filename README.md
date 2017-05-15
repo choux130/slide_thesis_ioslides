@@ -1,4 +1,4 @@
-# slide for my master thesis
+# The slides for my master thesis
 Having opportunity to both try "ioslides" and "Slidy" to compile the slides for my master oral defense, I found that for me "ioslides" is better than "Slidy". 
 
 The following is their comparison according to my experience. 

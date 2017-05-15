@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# The slides for my master thesis\nHaving opportunity to both try \"ioslides\" and \"Slidy\" to compile the slides for my master oral defense, I found that for me \"ioslides\" is better than \"Slidy\". \n\nThe following is their comparison according to my experience. \n* **ioslides**\n  - Pros: \n    1. The time for compiling is not too bad. \n    2. The template is not so complex, so it is easy to understand the structure by looking at the source code and mimic. \n    3. The document is so decent! [http://rmarkdown.rstudio.com/ioslides_presentation_format.html](http://rmarkdown.rstudio.com/ioslides_presentation_format.html)\n    4. The display mode is awesome! \n  - Cons: \n    1. It is shame that it can not publish on github pages. \n    2. If you want more features, you have to write your own CSS starting from a completely empty file. So, it may be overwhelming if you do not have any foundation to CSS and HTML. \n  \n* **Slidy**\n  - Pros: \n    1. Already has css file. You can easily change it and customize it to meet your own needs. \n    2. So many features. It is easier for you to have a fancy slides based on its setting. \n    3. The online communities is big and helpful. \n    4. The website is good! [http://slidify.org](http://slidify.org)\n  - Cons: \n    1. It takes a lot of time to compile. I am not sure the reason, maybe it is because it has too many features. This is also the main reason for me to jump to ioslides. \n    2. It takes time to be familiar with for its complexity. \n    \n\n",
+    "created" : 1494828846817.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2911947055",
+    "id" : "EE7FBCA2",
+    "lastKnownWriteTime" : 1494828877,
+    "last_content_update" : 1494828877,
+    "path" : "~/Google Drive/UMN2014-2016/Spring2016/Plan B/slide_ioslides/README.md",
+    "project_path" : "README.md",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "markdown"
+}
