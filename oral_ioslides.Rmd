@@ -6,16 +6,13 @@ output:
   ioslides_presentation:
     css: styles.css
 ---
-## Overview {#font-color .smaller}
+## Overview {#font-color}
 1. What is Size-Biased Data? 
 2. Scientific Background for Mitochondria
 3. Goals for this project
 4. How the sampling process caused size-biased data? 
-5. Best Estimator <br />
-    * Simulation Study
-6. Hypothesis Test and Confidence Interval <br />
-    * Permutation Hypothesis Test 
-    * Boostrapping Confidence Interval 
+5. Investigate Possible Estimators with simulation study
+6. Use the best ones on real data
 7. Conclusion
 8. Discussion 
 
@@ -29,7 +26,7 @@ output:
 <img src="image/mall.jpg" style="width:95%">
 </div>
 
-## Scientific Background for Mitochondria {#font-color .build}
+## Scientific Background for Mitochondria {#font-color}
 <center>
 <img src="image/muscle.jpg" style="width:70%">
 </center>
@@ -45,57 +42,34 @@ output:
 
 ## Sampling Process - 1 {#font-color}
 * A young muscle fiber cell was magnifired to 166 different images by using Transmission Electron Microscope (TEM). 
-* Those falls in <b>" { "</b> are defined as beging in <b>Proximal end</b>, <br /> in <b>" [ "</b> are being in <b>Distal end</b>, and the rest are being in <b>Middle part</b>.
+<br />
 <br />
 <br />
 <img src="image/cell.png" align ="left" style="width:45%">
 <img src="image/location.png" align ="right" style="width:50%">
 
-## Sampling Process - 2 {#font-color}
-* For each location, divide images into two groups: Subsarcolemmanl and Interfibrillar group. 
-* In each group, randomly pick one image.
-* In each image, randomly pick <b>20 mitochondria</b>. 
+## Sampling Process - 2 {#font-color .build}
+> * For each location, divide images into two groups: <br /> Subsarcolemmanl and Interfibrillar group (ignore later).
+> * In each group, randomly pick one image.
+> * In each image, sample <b>20 mitochondria</b>. 
 </br><br/>
 <center>
 <img src="image/mitochondria.png" style="width:45%">
 </center>
 
-## Sampling Process - 3 {#font-color}
-* Generate a list of random coordinates. 
-* Pick the mitochondria whose area in the photo includes one or more generated coordinates. 
+## Sampling Process - 3 {#font-color .build}
+> * Generate a list of random coordinates. 
+> * Pick the mitochondria whose area in the photo includes one or more generated coordinates. 
 <br />
 <br />
 <center>
 <img src="image/random.PNG" style="width:60%">
 </center>
 
-## Raw Data 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, results= "asis"}
-library(devtools)
-library(ggplot2)
-library(plotly)
-library(DT)
-
-datt=read.csv("/Users/chou/Google Drive/UMN2014-2016/Spring2016/Plan B/final/clean_dat.csv",header=TRUE)
-dat = datt[,-c(1,4,5)]
-dat = dat[,c(1,3,2,4:11)]
-names(dat) = c("Sample ID", "image No.", "# in image",
-                "image name", "location", "PMD", "SI", 
-                "Area", "Perimeter", "Circularity",
-                "Aspect Ratio")
-d=datatable(dat, options = list( 
-  searching = FALSE,
-  autoWidth = TRUE,
-  initComplete = JS(
-    "function(settings, json) {",
-    "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});","}")
-))
-path <- file.path(getwd(), "/widget/", "dat.html")
-htmlwidgets::saveWidget(as_widget(d), file = path)
-```
-<iframe src="widget/dat.html"></iframe>
-
-
+## Raw Data
+<center>
+<img src="image/data.png" style="width:100%">
+</center>
 ## Raw Data {#font-color}
 * <b>Area $({\mu m}^{2})$:</b> <br />
   The area occupied by a mitochondrion in an image. 
@@ -109,24 +83,13 @@ Circularity is equal to $\frac{4 \pi Area}{Perimeter^2}$. <br />
   <p style="font-size:80%;">(If $AR \leq 2$, it is considered short; if $2 < AR \leq 4$, intermediate; if $AR > 4$, long.)</p>
 
 
-## Problems from the Sampled Data {#font-color .build}
-> 1. It is not random sample but size-biased! 
-> 2. The larger mitochondria are easier to be picked in our sample. 
-> 3. If we used sample mean as our population mean estimator, it will definitely be overestimated! 
+```{r echo=FALSE, message=FALSE, warning=FALSE, results= "asis"}
+library(devtools)
+library(ggplot2)
+library(plotly)
 
-
-## New Goals for this project {#font-color .build}
-> 1. <font color="darkred"> <b>What is the appropriate estimator for the size-biased data?</b> </font> 
-2. Whether Properties of mitochondria are different by locations.
-3. Suggestions on sampling scheme for future research.
-
-## New Goals for this project {#font-color .build}
-> 1. <font color="darkred"> <b>What is the appropriate estimator for the size-biased data?</b></font> <br />
-<font color="green">A: Simulation Study.</font> <br />
-> 2. Whether Properties of mitochondria are different by locations. <br />
-<font color="green">A: Permutation Test and Bootstrapping Confidence Interval </font> <br />
-> 3. Suggestions on sampling scheme for future research. <br />
-<font color="green">A: Based on the Simulation Study.</font>
+datt=read.csv("/Users/chou/Google Drive/UMN2014-2016/Spring2016/Plan B/final/clean_dat.csv",header=TRUE)
+```
 
 ## Data Exploration: Area 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, results= "asis"}
@@ -135,11 +98,12 @@ hist_PMD_a=ggplot(datt, aes(x=Area, color=PMD, fill=PMD))+
                  position="identity")+
   geom_density(alpha=.3)
 box_PMD_a=ggplot(datt, aes(x=PMD, y=Area, fill=PMD)) + 
-  geom_boxplot() +
+  geom_boxplot(outlier.shape=NA, outlier.colour = NA) +
   geom_point(position = position_jitter(h=0,w=0.3))
 
-p1 <- ggplotly(hist_PMD_a)
-p2 <- ggplotly(box_PMD_a)
+p1 <- plotly_build(hist_PMD_a)
+p2 <- plotly_build(box_PMD_a)
+
 p = subplot(p1,p2, margin=0.05) 
 
 path <- file.path(getwd(), "/widget/", "area.html")
@@ -155,7 +119,7 @@ hist_PMD_p=ggplot(datt, aes(x=Perimeter, color=PMD,
                  position="identity")+
   geom_density(alpha=.2) 
 box_PMD_p=ggplot(datt, aes(x=PMD, y=Perimeter, fill=PMD)) +
-  geom_boxplot()+
+  geom_boxplot(outlier.shape=NA, outlier.colour = NA)+
   geom_point(position = position_jitter(h=0,w=0.3))
 
 p1 <- ggplotly(hist_PMD_p)
@@ -175,7 +139,7 @@ hist_PMD_c=ggplot(datt, aes(x=Circularity, color=PMD,
                  position="identity")+
   geom_density(alpha=.2) 
 box_PMD_c=ggplot(datt,aes(x=PMD,y=Circularity,fill=PMD)) + 
-  geom_boxplot()+
+  geom_boxplot(outlier.shape=NA, outlier.colour = NA)+
   geom_point(position = position_jitter(h=0,w=0.3))
 
 p1 <- ggplotly(hist_PMD_c)
@@ -197,7 +161,7 @@ hist_PMD_ar=ggplot(datt, aes(x=Aspect.Ratio, color=PMD,
 
 box_PMD_ar=ggplot(datt, aes(x=PMD, y=Aspect.Ratio, 
                             fill=PMD)) + 
-  geom_boxplot()+
+  geom_boxplot(outlier.shape=NA, outlier.colour = NA)+
   geom_point(position = position_jitter(h=0,w=0.3))
 
 p1 <- ggplotly(hist_PMD_ar)
@@ -208,9 +172,11 @@ path <- file.path(getwd(), "/widget/", "ar.html")
 htmlwidgets::saveWidget(as_widget(p), file = path)
 ```
 <iframe src="widget/ar.html"></iframe>
-
+  
 ## Data Exploration: Scatter Plots
-```{r echo=FALSE, message=FALSE, warning=FALSE, results= "asis"}
+<br />
+<br />
+```{r echo=FALSE, message=FALSE, warning=FALSE, results= "asis", fig.width =8, fig.height=3.5}
 a.per=ggplot(datt, aes(x = Area, y = Perimeter))+
   geom_point()
 a.cir=ggplot(datt, aes(x = Area, y = Circularity))+
@@ -218,56 +184,96 @@ a.cir=ggplot(datt, aes(x = Area, y = Circularity))+
 a.ar=ggplot(datt, aes(x = Area, y = Aspect.Ratio))+
   geom_point()
 
-s = subplot(ggplotly(a.per), ggplotly(a.cir), 
-            ggplotly(a.ar), shareX = TRUE, titleY=TRUE, 
-            margin = 0.05)
-path <- file.path(getwd(), "/widget/", "scatter.html")
-htmlwidgets::saveWidget(as_widget(s), file = path)
+library(grid)
+library(gridExtra)
+a = grid.arrange(a.per, a.cir, a.ar, ncol = 3)
 ```
-<iframe src="widget/scatter.html"></iframe>
 
-## Weighted Distribution {#font-color .smaller}
-* Cox (1962) proposed an idea of Weighted Distribution,
-$${f}^{\ast}(x)=\frac{w(x)f(x)}{{E}_{f}(w(x))}$$
-* Cox (1962) also proposed the Harmonic Mean ($\frac{n}{\sum_{i=1}^{n}\frac{1}{{x}_{i}}}$) as an estimator of population mean of $X$, and proved that it will converge to $\mu={E}_{f}(x)$ as $n \to \infty$.
-<br />
-<br />
-<br />
+## Best Estimators {#font-color}
+* <b>Circularity:</b> <br />
+  Arithmetic Mean
+* <b>Aspect Ratio:</b> <br />
+  Arithmetic Mean 
+  
+## Problems from the Sampled Data {#font-color}
+1. It is <b>NOT</b> random sample but size-biased! 
+2. The larger mitochondria are easier to be picked in our sample. 
+3. If we used sample mean as our population mean estimator, it will definitely be <b>overestimated</b>! 
+
+## New Goals for this project {#font-color .build}
+> 1. <font color="darkred"> <b>What is the appropriate estimator for the size-biased data?</b></font> <br />
+<font color="green">A: Simulation Study for finding the best estimator.</font> <br />
+> 2. Whether Properties of mitochondria are different by locations. <br />
+<font color="green">A: Permutation Test and Bootstrapping Confidence Interval </font> <br />
+> 3. Suggestions on sampling scheme for future research. <br />
+<font color="green">A: Based on the Simulation Study.</font>
+
+
+## Weighted Distribution {#font-color .smaller .build}
 <center>
 <img src="image/weighted.PNG" style="width:50%">
-</center>
+</center><br />
+<ol class="build">
+  <li class="to-build"> 
+  Cox (1962) proposed an idea of Weighted Distribution,
+$${f}^{\ast}(x)=\frac{w(x)f(x)}{{E}_{f}(w(x))}.$$ </li>
+  <li class="to-build">
+  Cox (1962) also proposed the <b>Harmonic Mean</b> ($\frac{n}{\sum_{i=1}^{n}\frac{1}{{x}_{i}}}$) as an estimator of population mean of $X$, and proved that it will converge to $\mu={E}_{f}(x)$ as $n \to \infty$ when $w(x)=x$. </li>
+<ol>
 
 ## Simulation Study - Area {#font-color}
-  * Suppose that the true distribution of  $Area\;\sim\;Exp(\theta)$.
-  * The observed distribution of $Area\;\sim\;Gamma(2,\theta)$. 
-  * The red dash line is $Gamma(2, \widehat{\theta}),$ where $\widehat{\theta} = \bar{a} = 1183$ 
-<br />
+  * Assume the true distribution, $Area\; \sim \; Exp(\theta) = f(A)$.
+  * Then the observed distribution, $Area\; \sim \; Gamma(2,\theta) = f^{*}(A)$. 
+  * The red dash line is $Gamma(2, \widehat{\theta}),$ where $\widehat{\theta} = \frac{\bar{a}}{2} \doteq  1183$ 
 <br />
 <br />
 <center>
-<img src="image/area_hist.png" style="width:60%">
+<img src="image/area_hist.png" style="width:55%">
 </center>
 
 
 ## Candidate Estimators - Area {#font-color .smaller}
-  1. Arithmetic Mean (AM) $$\frac{\sum_{i=1}^{n}{a}_{i}}{n}$$
-  2. Weighted Mean (WM) or Harmonic Mean
-  $$\frac{\sum_{i=1}^{n}{w}_{i}{a}_{i}}{\sum_{i=1}^{n}{w}_{i}}=\frac{n}{\sum_{i=1}^{n}\frac{1}{{a}_{i}}}\;,\;\;\text{where}\;\; {w}_{i}=\frac{1}{{p}_{i}}=\frac{n\bar{a}}{{a}_{i}}$$
-  3. Maxima Likelihood Estimator (MLE) 
-$$\frac{\sum_{i=1}^{n}{a}_{i}}{2n}=\frac{AM}{2}$$
+  1. <b>Arithmetic Mean (AM)</b>
+  $$\frac{\sum_{i=1}^{n}{a}_{i}}{n}$$
+  2. <b>Weighted Mean (WM) or Harmonic Mean</b> 
+  <br />
+  <br />
+  $$
+  \frac{\sum_{i=1}^{n}{w}_{i}{a}_{i}}{\sum_{i=1}^{n}{w}_{i}}=\frac{n}{\sum_{i=1}^{n}\frac{1}{{a}_{i}}}\;,\;\;\text{where}\;\; {w}_{i}=\frac{1}{{p}_{i}}=\frac{n\bar{a}}{{a}_{i}}
+  $$
+  <br />
+  3. <b>Maximum Likelihood Estimator (MLE)</b> 
+  <br />
+  <br />
+  $$\frac{\sum_{i=1}^{n}{a}_{i}}{2n}=\frac{AM}{2}$$
 
+## Simulation Study - Area (Overview) {#font-color .build}
+* Simulate mitochondria data in a muscle fiber cell.
+* Sample from <b>finite population ($\mathbf{N}$)</b> rather than infinite population. 
+* Do both sampling <b>with</b> replacement and <b>without</b> replacement.
+* <b>Sample size ($\mathbf{n}$)</b> is decided by the $\mathbf{Ratio}$ between $\mathbf{N}$ and $\mathbf{n}$. 
+<br />
+<br />
+<center>
+<img src="image/a_cell.PNG" style="width:65%">
+</center>
+    
+## Simulation Study - Area {#font-color .build}
+> 1.  Assume $Area \sim Exp(\mu)$, <br />
+    Set $N = 2000$, <br />
+    $Ratio$ = $(5\%, 10\%, 30\%, 50\%, 70\%, 95\%)$, <br />
+    $Repeated\;Times = 1000$, <br />
+    $\mu = 1000$. 
+> 2. Generate $N$ samples from $Exp(\mu)$ as subpopulation of Area <br />
+    Calculate subpopulation mean, $\mu_A$<font color="red">(This is what we are interested in!)</font>.
+> 3. Sample a set of samples ($n$) from subpopulation ($N$) with sampling probability proportional to the value of Area with and without replacement ($n = N \times Ratio$).
 
 ## Simulation Study - Area {#font-color .build}
-> 1. Set $N = 2000$; Ratio between $N$ and $n$ are $(5\%, 10\%, 30\%, 50\%, 70\%, 95\%)$; $Repeated\;Times = 1000$ and $\mu = 1000$.
-> 2. Generate $N$ samples from $Exp(\mu)$ as subpopulation of Area and calculate subpopulation mean, $\mu_A$, as the known parameter.
-> 3. Sample a set of samples with size $n$ from subpopulation with sampling probability proportional to the value of Area with and without replacement. $n$ is the product of $N$ and a certain $Ratio$.
-
-## Simulation Study - Area {#font-color }
 <ol start="4" class="build">
-  <li class="to-build"> For each set of samples, calculate the candidate estimators: Arithmetic Mean (AM), Weighted Mean (WM) and Maximum Likelihood Estimator (MLE).
+  <li class="to-build"> For each set of samples, calculate the candidate estimators: <b>Arithmetic Mean (AM)</b>, <b>Weighted Mean (WM)</b> and <b>Maximum Likelihood Estimator (MLE)</b>.
   <li class="to-build"> Repeat 3. 4. for the set $Repeated\;Times$ for each $Ratio$. </li>
-  <li class="to-build"> Calculate the Mean, Standard Deviation and Root MSE for each candidate estimator. Also
-draw plots of sampling distributions for each candidate estimator. </li>
+  <li class="to-build"> Calculate the <b>Mean</b>, <b>Standard Deviation</b> and <b>Root MSE</b> for each candidate estimator. <br />
+Draw plots of sampling distributions for each candidate estimator. </li>
 </ol>
 
 ## Results of Simulation Study - Area {#font-color}
@@ -275,15 +281,18 @@ draw plots of sampling distributions for each candidate estimator. </li>
 <img src="image/sim_a.png" style="width:65%">
 </cetner>
 
-## Best Estimators {#font-color}
-* <b>Area:</b> <br />
-  Weighted Mean and MLE. 
+## Best Estimators - Area {#font-color}
+* <b>Sampling "WITH" Replacement:</b> <br />
+  <font color="green">Weighted Mean and MLE</font>
+  <br />
+* <b>Sampling "WITHOUT" Replacement: </b><br />
+  <font color="green">Unfortunately, not clear yet. </font>
 
 ## Simulation Study - Perimeter {#font-color .smaller}
-* Area is independent to Circularity. 
-* Perimeter$=\sqrt{4\pi}\sqrt{\frac{\text{Area}}{\text{Circularity}}}$
-* Suppose that the true distribution of  $Circularity\;\sim\;Beta(\alpha, \beta)$. 
+* $Perimeter =\sqrt{4\pi}\sqrt{\frac{Area}{Circularity}}$
+* $Area \perp Circularity$. 
 * The observed distribution of $Circularity\;\sim\;Beta(15,5)$. 
+* Assume that the true distribution of  $Circularity\;\sim\;Beta(\alpha, \beta)$. 
 * The red dash line is $Beta(15, 5)$. 
 <br />
 <br />
@@ -293,45 +302,70 @@ draw plots of sampling distributions for each candidate estimator. </li>
 </center>
 
 ## Candidate Estimators - Perimeter {#font-color .smaller}
-  1. Arithmetic Mean (AM)
+  1. <b>Arithmetic Mean (AM)</b>
   $$\frac{\sum_{i=1}^{n}{p}_{i}}{n}$$
-  2. Weighted Mean (WM)
+  2. <b>Weighted Mean (WM)</b>
 $$\frac{\sum_{i=1}^{n}{w}_{i}{p}_{i}}{\sum_{i=1}^{n}{w}_{i}}\;,\;\;\text{where}\;\; {w}_{i}=\frac{n\bar{a}}{{a}_{i}}$$
-  3. Delta Method Esitmator (DME)
+  3. <b>Delta Method Esitmator (DME)</b>
 $$\sqrt{4\pi}\sqrt{\frac{\bar{a}/2}{\bar{c}}}$$
-  4. 2nd Order Taylor's Approximation Estimator (2TAE)
+  4. <b>2nd Order Taylor's Approximation Estimator (2TAE)</b>
 $$\sqrt{4 \pi}\left[ \sqrt{\frac{\bar{a}/2}{\bar{c}}} - \frac{1}{8} (\frac{\bar{a}}{2})^\frac{-3}{2}(\bar{c})^\frac{-1}{2}\frac{{s}_{a}^2}{2}+\frac{3}{8}(\frac{\bar{c}}{2})^\frac{1}{2}(\bar{c})^\frac{-5}{2}{s}_{c}^2\right]$$
 
-## Simulation Study - Perimeter {#font-color .build}
-> 1. Set $N = 2000$; $Ratio$ between $N$ and $n$ are $(5%, 10%, 30%, 50%, 70%, 95%)$; $Repeated\;Times = 1000$ and $\mu = 1000$.
-> 2. Generate $N$ samples from $Exp(\mu)$ distribution as subpopulation of Area and $N$ samples from $Beta(\alpha, \beta)$ as subpopulation of Circularity. $\alpha$ and $\beta$ are set to be 15 and 5 by observing the data we have.
-> 3. Plug the generated $N$ elements of Area and $N$ elements of Circularity into the formula, $\text{Perimeter}=\sqrt{4\pi}\sqrt{\frac{\text{Area}}{\text{Circularity}}}$, and obtain $N$ elements of Perimeter. Calculate the mean of
-$N$ elements of Perimeter, ${\mu}_{P}$, and treat it as the true mean of Perimeter.
 
-## Simulation Study - Perimeter {#font-color .build}
-<ol start="4" class="build">
-  <li class="to-build">Sample a set of samples with size $n$ from subpopulation of Perimeter with sampling probability proportional to Area with and without replacement. $n$ is the product of $N$ and a certain $Ratio$.</li>
-  <li class="to-build">For each set of samples, calculate the candidate estimators: Arithmetic Mean (AM), Weighted Mean (WM), Delta Method Estimator (DME), 2nd Order Taylor’s Approximation Estimator (2TAE). </li>
-  <li class="to-build">Repeat 3. 4. for the set $Repeated\;Times$ for each $Ratio$.</li>
-  <li class="to-build">Calculate the Mean, Standard Deviation and Root MSE for each candidate estimator. Also
-draw plots of sampling distributions for each candidate estimator.</li>
-</ol>
+## Simulation Study - Perimeter {#font-color .build} 
+> 1. Generate the <b>finite subpopulation ($\mathbf{N}$)</b> data from $Circularity \sim Beta(15,5)$. 
+> 2. Plug the generated Area and Circularity data into formula to obtain subpopulation of Perimeter.  
+> 3. Sample from the subpopulation ($N$) with sampling probability proportional to Area with and without replacement.
+> 4. See the performance of the candidates estimators: 
+<b>Arithmetic Mean (AM)</b>, <b>Weighted Mean (WM)</b>, 
+<b>Delta Method Esitmator (DME)</b>, <b>2nd Order Taylor's Approximation Estimator (2TAE)</b>. 
+
+## Simulated Data - Perimeter {#font-color } 
+<center>
+```{r echo=FALSE, message=FALSE, warning=FALSE, results= "asis", fig.width = 8, fig.height= 5.5}
+library(ggplot2)
+a.per=ggplot(datt, aes(x = Area, y = Perimeter))+
+  geom_point()
+a.cir=ggplot(datt, aes(x = Area, y = Circularity))+
+  geom_point()
+
+mean.size=1000
+N=2000
+n=120
+sh1=15
+sh2=5
+
+set.seed(12345)
+sub.pop.area=rexp(N,rate=1/mean.size)
+sub.pop.cir=rbeta(length(sub.pop.area),shape1=sh1,shape2=sh2)
+sub.pop.per=sqrt(4*pi)*sqrt(sub.pop.area/sub.pop.cir)
+true.mean.per=mean(sub.pop.per)
+
+sim.data=data.frame(sub.pop.area,sub.pop.per,sub.pop.cir)
+sample=sim.data[sample(1:dim(sim.data)[1],n,prob=sim.data[,1],replace=TRUE),]
+
+a.per_sim=ggplot(sample, aes(x = sub.pop.area, y = sub.pop.per))+geom_point() + labs(x = "simulated_Area", y = "simulated_Perimeter") 
+a.cir_sim=ggplot(sample, aes(x = sub.pop.area, y = sub.pop.cir))+geom_point() + labs(x = "simulated_Area", y = "simulated_Circularity") 
+
+library(grid)
+library(gridExtra)
+a = grid.arrange(a.cir, a.cir_sim, a.per, a.per_sim, ncol = 2)
+```
+</center>
+
 
 ## Results of Simulation Study - Perimeter {#font-color}
 <center>
 <img src="image/sim_per.png" style="width:65%">
 </center>
 
-## Best Estimators {#font-color .build}
-> * <b>Area:</b> <br />
-  Weighted Mean and MLE. 
-> * <b>Perimeter: </b> <br />
-  Weighted Mean and 2TAE. 
-> * <b>Circularity: </b> <br />
-  Arithmetic Mean (because it is independent to Area)
-> * <b>Aspect Ratio: </b> <br />
-  Arithmetic Mean (because it is independent to Area)
-  
+## Best Estimators - Perimeter {#font-color}
+* <b>Sampling "WITH" Replacement: </b><br />
+  <font color="green">Weighted Mean and 2TAE</font>
+  <br />
+* <b>Sampling "WITHOUT" Replacement:</b> <br />
+  <font color="green">Unfortunately, not clear yet. </font>
+
 ## Hypothesis Test {#font-color}
   * <b>Overall Hypothesis Test: </b>
 
@@ -357,16 +391,27 @@ $$
 \end{align*}
 $$
 
-## Hypothesis Test : Permutation Test {#font-color}
-  * <b>Reasons: </b>
-    * Area and Perimeter are size-biased. 
-    * Circularity and Aspect Ratio, the data violated the normality assumption of ANOVA and T-test. 
-
-  * <b>Overall Test (Permutation Test of ANOVA): </b>
-    * significance level = $5\%$
-  * <b>Pairwsie Comparison Test (Permutation Test of T-test):</b>
-    * Bonferroni’s correction, for its easy interpretation and its simultaneous confidence interval for the mean differences.
-    * significance level = $\frac{5\%}{3} = 0.0167$ 
+## Hypothesis Test : Permutation Test {#font-color .smaller}
+> * <b>Reasons: </b>
+  <ul>
+    <li> Area and Perimeter are size-biased. </li>
+    <li> Circularity and Aspect Ratio, the data violated the normality assumption of ANOVA and T-test. </li> 
+  </ul>
+  <br />
+> * <b>Overall Test (Permutation Test of ANOVA): </b> 
+  <ul>
+    <li>
+      $\sum_{i=\left\{P,M,D\right\}}{(\widehat{{\mu}_{i}}-\widehat{{\mu}})}^{2}$</li>
+    <li> significance level = $5\%$ </li>
+  </ul>
+  <br />
+> * <b>Pairwise Comparison Test (Permutation Test of T-test):</b> 
+  <ul>
+    <li>
+      $\widehat{\mu}_{i}-\widehat{\mu}_{j}$, where $i=\left \{P,M,D\right\}$</li>
+    <li> Bonferroni’s correction:
+    significance level = $\frac{5\%}{3} = 0.0167$.</li>
+  </ul>
   
 ## Results for the Hypothesis Test 
 <center>
@@ -390,18 +435,24 @@ $$
 </center>
 
 ## Conclusions {#font-color .build .smaller}
-> 1. What is the appropriate estimator for the size-biased data? <br />
-  <font color="green">A: Use Nonparametric Weighted Mean as the best estimator for population mean and do hypothesis test based on this estimator. (because of none distribution assumptions)</font>
-> 2. Whether Properties (Area, Perimeter, Circularity, Aspect Ratio)of mitochondria are different by locations. <br />
-  <font color="green">A: Middle part of the muscle fiber cell have larger Area, Perimeter and Circularity which means to support muscle contraction more energy is needed in Middle.</font>
-> 3. Suggestions on sampling scheme for future research. <br />
-  <font color="green">A: Sampling With Replacement(SWR) rather than Sampling Without Replacement(SWOR) in their sampling scheme because as we can see in the Simulation section the performance of Weighted Mean is not desirable when the case is SWOR unless they can assure the Ratio between population and samples are around 10% or less.</font>
-  
-## Discussion {#font-color .build}
-> * Finding the best estimator for SWOR is a potential area for future work.
-> * We expect Nonparametric Weighted Mean should have similar results with the Parametric Estimators (MLE for Area and 2TAE for Perimeter) but wider confidence interval for the Nonparametric Weighted Mean. However, in our data, things are not like what we expected. 
-> * Maybe it is because of improper distribution assumptions on Area and Circularity. Hence, in the future the robustness of the distribution assumptions can be an interesting topic to work on too.
-  
+>  1. <b>Middle part</b> of the muscle fiber cell have larger Area, Perimeter and Circularity. <br />
+  <ul>
+      <li> Area: $\underline{M > P} > D$ </ui> 
+      <li> Perimeter: $\underline{M > P} > D$ </li>
+      <li> Circularity: $\underline{M > P}>D$  &  $M > \underline{P > D}$ </li>
+      <li> Aspect Ratio: $\underline{M > P > D}$ </li>
+  </ul>
+    <br />
+>  2. The appropriate estimator for the size-biased data is <b>Non-parametric Weighted Mean</b>. <br /><br />
+>  3. Suggest to use <b>Sampling With Replacement (SWR)</b> rather than Sampling Without Replacement (SWOR) in their future sampling scheme. <br />
+  Weighted Mean does not preform well in the case of SWOR when Ratio of $N$ and $n$ is larger than $10\%$.</font>
+
+## Future Work {#font-color .build}
+> * Find the best estimator for SWOR. 
+> * Robustness of the distribution assumptions can be an interesting topic. <br />
+  The Nonparametric Weighted Mean had notably different results with the Parametric Estimators (MLE for Area and 2TAE for Perimeter). Maybe it is because of improper distribution assumptions on Area and Circularity.  
+> * Include the effect of Subsarcolemmanl and Interfibrillar group and even possible interaction. 
+
 ## References {#font-color}
 * Bratic, Ana and Larsson, Nils-Gran. “The Role of Mitochondria in Aging.” Journal of Clinical Investigation 123, no. 3 (2013): 951-57. 
 * Cox, D. R. Renewal Theory. London: Methuen, 1962.
@@ -415,3 +466,17 @@ tributions.” Sankhya. Series B 38,48-61.
 [https://www.123rf.com/photo_30920353_people-in-shopping-mall-in-sofia-bulgaria.html]()https://www.123rf.com/photo_30920353_people-in-shopping-mall-in-sofia-bulgaria.html
 * Muscle: <br />
 [http://slideplayer.com/slide/9024081/](http://slideplayer.com/slide/9024081/)
+
+## The end 
+<br />
+<center>
+<img src="image/thanks.jpg" style="width:80%;">
+</center>
+<font size="2">photo from  [http://www.desicomments.com/desi/thank-you/](http://www.desicomments.com/desi/thank-you/)</font>
+
+## Questions?
+<br />
+<center>
+<img src="image/qanda.jpg" style="width:80%;">
+</center>
+<font size="2">photo from  [http://www.bookcovercafe.com/independent-publishing-q-and-a-series-01/](http://www.bookcovercafe.com/independent-publishing-q-and-a-series-01/)</font>
