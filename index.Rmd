@@ -16,7 +16,7 @@ output:
 7. Conclusion
 8. Future Works 
 
-## Examples for Size-Biased Data {#font-color .build}
+## Examples for Size-Biased Data {#font-color }
 <div style="float: left; width: 50%;">
 <br />
 <img src="image/fishingnet.jpg" style="width:95%;">
@@ -31,9 +31,9 @@ output:
 <img src="image/muscle.jpg" style="width:70%">
 </center>
 
-## Goals for this project {#font-color .build}
-> 1. Whether <b>Properties</b> (area, perimeter, circularity and aspect ratio) of mitochondria are different by <b>locations</b> (proximal, middle and distal end). 
-> 2. Suggestions on <b>sampling method</b> for future research (more cells). 
+## Goals for this project {#font-color}
+1. Whether <b>Properties</b> (area, perimeter, circularity and aspect ratio) of mitochondria are different by <b>locations</b> (proximal, middle and distal end). 
+2. Suggestions on <b>sampling method</b> for future research (more cells). 
 <br />
 <br />
 <center>
@@ -48,10 +48,10 @@ output:
 <img src="image/cell.png" align ="left" style="width:45%">
 <img src="image/location.png" align ="right" style="width:50%">
 
-## Sampling Process - 2 {#font-color .build}
-> * For each location, divide images into two groups: <br /> Subsarcolemmanl and Interfibrillar group (ignore later).
-> * In each group, randomly pick one image.
-> * In each image, sample <b>20 mitochondria</b>. 
+## Sampling Process - 2 {#font-color}
+* For each location, divide images into two groups: <br /> Subsarcolemmanl and Interfibrillar group (ignore later).
+* In each group, randomly pick one image.
+* In each image, sample <b>20 mitochondria</b>. 
 </br><br/>
 <center>
 <img src="image/mitochondria.png" style="width:45%">
@@ -201,16 +201,16 @@ a = grid.arrange(a.per, a.cir, a.ar, ncol = 3)
 * <b>Aspect Ratio:</b> <br />
   Arithmetic Mean 
   
-## New Goals for this project {#font-color .build}
-> 1. <font color="darkred"> <b>What is the appropriate estimator for the size-biased data?</b></font> <br />
+## New Goals for this project {#font-color }
+1. <font color="darkred"> <b>What is the appropriate estimator for the size-biased data?</b></font> <br />
 <font color="green">A: Simulation Study for finding the best estimator.</font> <br />
-> 2. Whether Properties of mitochondria are different by locations. <br />
+2. Whether Properties of mitochondria are different by locations. <br />
 <font color="green">A: Permutation Test and Bootstrapping Confidence Interval </font> <br />
-> 3. Suggestions on sampling scheme for future research. <br />
+3. Suggestions on sampling scheme for future research. <br />
 <font color="green">A: Based on the Simulation Study.</font>
 
 
-## Weighted Distribution {#font-color .smaller .build}
+## Weighted Distribution {#font-color .smaller }
 <center>
 <img src="image/weighted.PNG" style="width:50%">
 </center>
@@ -245,28 +245,28 @@ $${f}^{\ast}(x)=\frac{w(x)f(x)}{{E}_{f}(w(x))}.$$
   <br />
   $$\frac{\sum_{i=1}^{n}{a}_{i}}{2n}=\frac{AM}{2}$$
 
-## Simulation Study - Area (Overview) {#font-color .build}
-> * Simulate mitochondria data in a muscle fiber cell.
-> * Sample from <b>finite population ($\mathbf{N}$)</b> rather than infinite population. 
-> * Do both sampling <b>with</b> replacement and <b>without</b> replacement.
-> * <b>Sample size ($\mathbf{n}$)</b> is decided by the $\mathbf{Ratio}$ between $\mathbf{N}$ and $\mathbf{n}$. 
+## Simulation Study - Area (Overview) {#font-color }
+* Simulate mitochondria data in a muscle fiber cell.
+* Sample from <b>finite population ($\mathbf{N}$)</b> rather than infinite population. 
+* Do both sampling <b>with</b> replacement and <b>without</b> replacement.
+* <b>Sample size ($\mathbf{n}$)</b> is decided by the $\mathbf{Ratio}$ between $\mathbf{N}$ and $\mathbf{n}$. 
 <br />
 <br />
 <center>
 <img src="image/a_cell.PNG" style="width:65%">
 </center>
     
-## Simulation Study - Area {#font-color .build}
-> 1.  Assume $Area \sim Exp(\mu)$, <br />
+## Simulation Study - Area {#font-color }
+1.  Assume $Area \sim Exp(\mu)$, <br />
     Set $\mu = 1000$ <br />
     $N = 2000$, <br />
     $Ratio$ = $(5\%, 10\%, 30\%, 50\%, 70\%, 95\%)$, <br />
     $Repeated\;Times = 1000$. 
-> 2. Generate $N$ samples from $Exp(\mu)$ as subpopulation of Area <br />
+2. Generate $N$ samples from $Exp(\mu)$ as subpopulation of Area <br />
     Calculate subpopulation mean, $\mu_A$, <font color="red"> (This is what we are interested in!)</font>.
-> 3. Sample a set of samples ($n$) from subpopulation ($N$) with sampling probability proportional to the value of Area with and without replacement ($n = N \times Ratio$).
+3. Sample a set of samples ($n$) from subpopulation ($N$) with sampling probability proportional to the value of Area with and without replacement ($n = N \times Ratio$).
 
-## Simulation Study - Area {#font-color .build}
+## Simulation Study - Area {#font-color }
 <ol start="4" class="build">
   <li class="to-build"> For each set of samples, calculate the candidate estimators: <b>Arithmetic Mean (AM)</b>, <b>Weighted Mean (WM)</b> and <b>Maximum Likelihood Estimator (MLE)</b>.
   <li class="to-build"> Repeat 3. 4. for the set $Repeated\;Times$ for each $Ratio$. </li>
@@ -310,11 +310,11 @@ $$\sqrt{4\pi}\sqrt{\frac{\bar{a}/2}{\bar{c}}}$$
 $$\sqrt{4 \pi}\left[ \sqrt{\frac{\bar{a}/2}{\bar{c}}} - \frac{1}{8} (\frac{\bar{a}}{2})^\frac{-3}{2}(\bar{c})^\frac{-1}{2}\frac{{s}_{a}^2}{2}+\frac{3}{8}(\frac{\bar{c}}{2})^\frac{1}{2}(\bar{c})^\frac{-5}{2}{s}_{c}^2\right]$$
 
 
-## Simulation Study - Perimeter {#font-color .build} 
-> 1. Generate the <b>finite subpopulation ($\mathbf{N}$)</b> data from $Circularity \sim Beta(15,5)$. 
-> 2. Plug the generated Area and Circularity data into formula to obtain subpopulation of Perimeter.  
-> 3. Sample from the finite subpopulation ($N$) of Perimeter with sampling probability proportional to Area with and without replacement.
-> 4. See the performance of the candidates estimators: 
+## Simulation Study - Perimeter {#font-color } 
+1. Generate the <b>finite subpopulation ($\mathbf{N}$)</b> data from $Circularity \sim Beta(15,5)$. 
+2. Plug the generated Area and Circularity data into formula to obtain subpopulation of Perimeter.  
+3. Sample from the finite subpopulation ($N$) of Perimeter with sampling probability proportional to Area with and without replacement.
+4. See the performance of the candidates estimators: 
 <b>Arithmetic Mean (AM)</b>, <b>Weighted Mean (WM)</b>, 
 <b>Delta Method Esitmator (DME)</b>, <b>2nd Order Taylor's Approximation Estimator (2TAE)</b>. 
 
@@ -390,20 +390,20 @@ $$
 $$
 
 ## Hypothesis Test : Permutation Test {#font-color .smaller}
-> * <b>Reasons: </b>
+* <b>Reasons: </b>
   <ul>
     <li> Area and Perimeter are size-biased. </li>
     <li> Circularity and Aspect Ratio, the data violated the normality assumption of ANOVA and T-test. </li> 
   </ul>
   <br />
-> * <b>Overall Test (Permutation Test of ANOVA): </b> 
+* <b>Overall Test (Permutation Test of ANOVA): </b> 
   <ul>
     <li>
       $\sum_{i=\left\{P,M,D\right\}}{(\widehat{{\mu}_{i}}-\widehat{{\mu}})}^{2}$</li>
     <li> significance level = $5\%$ </li>
   </ul>
   <br />
-> * <b>Pairwise Comparison Test (Permutation Test of T-test):</b> 
+* <b>Pairwise Comparison Test (Permutation Test of T-test):</b> 
   <ul>
     <li>
       $\widehat{\mu}_{i}-\widehat{\mu}_{j}$, where $i=\left \{P,M,D\right\}$</li>
@@ -432,8 +432,8 @@ $$
 <img src="image/diff_cir_ar.png" style="width:65%">
 </center>
 
-## Conclusions {#font-color .build .smaller}
->  1. <b>Middle part and Proximal part</b> of the muscle fiber cell have significantly large Area, Perimeter and Circularity. <br />
+## Conclusions {#font-color  .smaller}
+1. <b>Middle part and Proximal part</b> of the muscle fiber cell have significantly large Area, Perimeter and Circularity. <br />
   <ul>
       <li> Area: $\underline{M > P} > D$ </ui> 
       <li> Perimeter: $\underline{M > P} > D$ </li>
@@ -441,14 +441,14 @@ $$
       <li> Aspect Ratio: $\underline{P > D > M}$ </li>
   </ul>
     <br />
->  2. The appropriate estimator for the size-biased data is <b>Non-parametric Weighted Mean</b>. <br /><br />
->  3. Suggest to use <b>Sampling With Replacement (SWR)</b> rather than Sampling Without Replacement (SWOR) in their future sampling scheme. 
+2. The appropriate estimator for the size-biased data is <b>Non-parametric Weighted Mean</b>. <br /><br />
+3. Suggest to use <b>Sampling With Replacement (SWR)</b> rather than Sampling Without Replacement (SWOR) in their future sampling scheme. 
 
-## Future Work {#font-color .build}
-> * Find the best estimator for SWOR. 
-> * Robustness of the distribution assumptions can be an interesting topic. <br />
+## Future Work {#font-color }
+* Find the best estimator for SWOR. 
+* Robustness of the distribution assumptions can be an interesting topic. <br />
   The Nonparametric Weighted Mean had notably different results with the Parametric Estimators (MLE for Area and 2TAE for Perimeter). Maybe it is because of improper distribution assumptions on Area and Circularity.  
-> * Include the effect of Subsarcolemmanl and Interfibrillar group and even possible interaction. 
+* Include the effect of Subsarcolemmanl and Interfibrillar group and even possible interaction. 
 
 ## References {#font-color}
 * Bratic, Ana and Larsson, Nils-Gran. “The Role of Mitochondria in Aging.” Journal of Clinical Investigation 123, no. 3 (2013): 951-57. 
