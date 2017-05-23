@@ -267,10 +267,12 @@ $${f}^{\ast}(x)=\frac{w(x)f(x)}{{E}_{f}(w(x))}.$$
 3. Sample a set of samples ($n$) from subpopulation ($N$) with sampling probability proportional to the value of Area with and without replacement ($n = N \times Ratio$).
 
 ## Simulation Study - Area {#font-color }
-<ol start="4" class="build">
-  <li class="to-build"> For each set of samples, calculate the candidate estimators: <b>Arithmetic Mean (AM)</b>, <b>Weighted Mean (WM)</b> and <b>Maximum Likelihood Estimator (MLE)</b>.
-  <li class="to-build"> Repeat 3. 4. for the set $Repeated\;Times$ for each $Ratio$. </li>
-  <li class="to-build"> Calculate the <b>Mean</b>, <b>Standard Deviation</b> and <b>Root MSE</b> for each candidate estimator. <br />
+<!-- <ol start="4" class="build"> start from the number 4 with the .build feature, knowing from checking the source code-->
+<ol start="4">
+  <!-- <li class="to-build"> -->
+  <li> For each set of samples, calculate the candidate estimators: <b>Arithmetic Mean (AM)</b>, <b>Weighted Mean (WM)</b> and <b>Maximum Likelihood Estimator (MLE)</b>.
+  <li> Repeat 3. 4. for the set $Repeated\;Times$ for each $Ratio$. </li>
+  <li> Calculate the <b>Mean</b>, <b>Standard Deviation</b> and <b>Root MSE</b> for each candidate estimator. <br />
 Draw plots of sampling distributions for each candidate estimator. </li>
 </ol>
 
