@@ -14,9 +14,9 @@ output:
 5. Investigate Possible Estimators with simulation study
 6. Use the best ones on real data
 7. Conclusion
-8. Discussion 
+8. Future Works 
 
-## Story about Size-Biased Data {#font-color .build}
+## Examples for Size-Biased Data {#font-color .build}
 <div style="float: left; width: 50%;">
 <br />
 <img src="image/fishingnet.jpg" style="width:95%;">
@@ -57,14 +57,19 @@ output:
 <img src="image/mitochondria.png" style="width:45%">
 </center>
 
-## Sampling Process - 3 {#font-color .build}
-> * Generate a list of random coordinates. 
-> * Pick the mitochondria whose area in the photo includes one or more generated coordinates. 
+## Sampling Process - 3 {#font-color}
+* Generate a list of random coordinates. 
+* Pick the mitochondria whose area in the photo includes one or more generated coordinates. 
 <br />
 <br />
 <center>
 <img src="image/random.PNG" style="width:60%">
 </center>
+
+## Problems from the Sampled Data {#font-color}
+1. It is <b>NOT</b> random sample but size-biased! 
+2. The larger mitochondria are easier to be picked in our sample. 
+3. If we used sample mean as the estimator of population mean, it will definitely be <b>overestimated</b>! 
 
 ## Raw Data
 <center>
@@ -89,6 +94,7 @@ library(ggplot2)
 library(plotly)
 
 datt=read.csv("/Users/chou/Google Drive/UMN2014-2016/Spring2016/Plan B/final/clean_dat.csv",header=TRUE)
+levels(datt$PMD)=list(P="P",M="M",D="D")
 ```
 
 ## Data Exploration: Area 
@@ -195,11 +201,6 @@ a = grid.arrange(a.per, a.cir, a.ar, ncol = 3)
 * <b>Aspect Ratio:</b> <br />
   Arithmetic Mean 
   
-## Problems from the Sampled Data {#font-color}
-1. It is <b>NOT</b> random sample but size-biased! 
-2. The larger mitochondria are easier to be picked in our sample. 
-3. If we used sample mean as our population mean estimator, it will definitely be <b>overestimated</b>! 
-
 ## New Goals for this project {#font-color .build}
 > 1. <font color="darkred"> <b>What is the appropriate estimator for the size-biased data?</b></font> <br />
 <font color="green">A: Simulation Study for finding the best estimator.</font> <br />
@@ -212,14 +213,11 @@ a = grid.arrange(a.per, a.cir, a.ar, ncol = 3)
 ## Weighted Distribution {#font-color .smaller .build}
 <center>
 <img src="image/weighted.PNG" style="width:50%">
-</center><br />
-<ol class="build">
-  <li class="to-build"> 
-  Cox (1962) proposed an idea of Weighted Distribution,
-$${f}^{\ast}(x)=\frac{w(x)f(x)}{{E}_{f}(w(x))}.$$ </li>
-  <li class="to-build">
-  Cox (1962) also proposed the <b>Harmonic Mean</b> ($\frac{n}{\sum_{i=1}^{n}\frac{1}{{x}_{i}}}$) as an estimator of population mean of $X$, and proved that it will converge to $\mu={E}_{f}(x)$ as $n \to \infty$ when $w(x)=x$. </li>
-<ol>
+</center>
+* Cox (1962) proposed an idea of Weighted Distribution,
+$${f}^{\ast}(x)=\frac{w(x)f(x)}{{E}_{f}(w(x))}.$$ 
+* Cox (1962) also proposed that the <b>Harmonic Mean</b> ($\frac{n}{\sum_{i=1}^{n}\frac{1}{{x}_{i}}}$) as an estimator of population mean of $X$, and proved that it will converge to $\mu={E}_{f}(x)$ as $n \to \infty$, when $w(x)=x$. 
+
 
 ## Simulation Study - Area {#font-color}
   * Assume the true distribution, $Area\; \sim \; Exp(\theta) = f(A)$.
@@ -248,10 +246,10 @@ $${f}^{\ast}(x)=\frac{w(x)f(x)}{{E}_{f}(w(x))}.$$ </li>
   $$\frac{\sum_{i=1}^{n}{a}_{i}}{2n}=\frac{AM}{2}$$
 
 ## Simulation Study - Area (Overview) {#font-color .build}
-* Simulate mitochondria data in a muscle fiber cell.
-* Sample from <b>finite population ($\mathbf{N}$)</b> rather than infinite population. 
-* Do both sampling <b>with</b> replacement and <b>without</b> replacement.
-* <b>Sample size ($\mathbf{n}$)</b> is decided by the $\mathbf{Ratio}$ between $\mathbf{N}$ and $\mathbf{n}$. 
+> * Simulate mitochondria data in a muscle fiber cell.
+> * Sample from <b>finite population ($\mathbf{N}$)</b> rather than infinite population. 
+> * Do both sampling <b>with</b> replacement and <b>without</b> replacement.
+> * <b>Sample size ($\mathbf{n}$)</b> is decided by the $\mathbf{Ratio}$ between $\mathbf{N}$ and $\mathbf{n}$. 
 <br />
 <br />
 <center>
@@ -260,12 +258,12 @@ $${f}^{\ast}(x)=\frac{w(x)f(x)}{{E}_{f}(w(x))}.$$ </li>
     
 ## Simulation Study - Area {#font-color .build}
 > 1.  Assume $Area \sim Exp(\mu)$, <br />
-    Set $N = 2000$, <br />
+    Set $\mu = 1000$ <br />
+    $N = 2000$, <br />
     $Ratio$ = $(5\%, 10\%, 30\%, 50\%, 70\%, 95\%)$, <br />
-    $Repeated\;Times = 1000$, <br />
-    $\mu = 1000$. 
+    $Repeated\;Times = 1000$. 
 > 2. Generate $N$ samples from $Exp(\mu)$ as subpopulation of Area <br />
-    Calculate subpopulation mean, $\mu_A$<font color="red">(This is what we are interested in!)</font>.
+    Calculate subpopulation mean, $\mu_A$, <font color="red"> (This is what we are interested in!)</font>.
 > 3. Sample a set of samples ($n$) from subpopulation ($N$) with sampling probability proportional to the value of Area with and without replacement ($n = N \times Ratio$).
 
 ## Simulation Study - Area {#font-color .build}
@@ -292,7 +290,7 @@ Draw plots of sampling distributions for each candidate estimator. </li>
 * $Perimeter =\sqrt{4\pi}\sqrt{\frac{Area}{Circularity}}$
 * $Area \perp Circularity$. 
 * The observed distribution of $Circularity\;\sim\;Beta(15,5)$. 
-* Assume that the true distribution of  $Circularity\;\sim\;Beta(\alpha, \beta)$. 
+* Assume that the true distribution of  $Circularity\;\sim\;Beta(\alpha=15, \beta=5)$. 
 * The red dash line is $Beta(15, 5)$. 
 <br />
 <br />
@@ -315,7 +313,7 @@ $$\sqrt{4 \pi}\left[ \sqrt{\frac{\bar{a}/2}{\bar{c}}} - \frac{1}{8} (\frac{\bar{
 ## Simulation Study - Perimeter {#font-color .build} 
 > 1. Generate the <b>finite subpopulation ($\mathbf{N}$)</b> data from $Circularity \sim Beta(15,5)$. 
 > 2. Plug the generated Area and Circularity data into formula to obtain subpopulation of Perimeter.  
-> 3. Sample from the subpopulation ($N$) with sampling probability proportional to Area with and without replacement.
+> 3. Sample from the finite subpopulation ($N$) of Perimeter with sampling probability proportional to Area with and without replacement.
 > 4. See the performance of the candidates estimators: 
 <b>Arithmetic Mean (AM)</b>, <b>Weighted Mean (WM)</b>, 
 <b>Delta Method Esitmator (DME)</b>, <b>2nd Order Taylor's Approximation Estimator (2TAE)</b>. 
@@ -435,17 +433,16 @@ $$
 </center>
 
 ## Conclusions {#font-color .build .smaller}
->  1. <b>Middle part</b> of the muscle fiber cell have larger Area, Perimeter and Circularity. <br />
+>  1. <b>Middle part and Proximal part</b> of the muscle fiber cell have significantly large Area, Perimeter and Circularity. <br />
   <ul>
       <li> Area: $\underline{M > P} > D$ </ui> 
       <li> Perimeter: $\underline{M > P} > D$ </li>
-      <li> Circularity: $\underline{M > P}>D$  &  $M > \underline{P > D}$ </li>
-      <li> Aspect Ratio: $\underline{M > P > D}$ </li>
+      <li> Circularity: $\underline{M > P} > D$ & $M > \underline{P > D}$</li>
+      <li> Aspect Ratio: $\underline{P > D > M}$ </li>
   </ul>
     <br />
 >  2. The appropriate estimator for the size-biased data is <b>Non-parametric Weighted Mean</b>. <br /><br />
->  3. Suggest to use <b>Sampling With Replacement (SWR)</b> rather than Sampling Without Replacement (SWOR) in their future sampling scheme. <br />
-  Weighted Mean does not preform well in the case of SWOR when Ratio of $N$ and $n$ is larger than $10\%$.</font>
+>  3. Suggest to use <b>Sampling With Replacement (SWR)</b> rather than Sampling Without Replacement (SWOR) in their future sampling scheme. 
 
 ## Future Work {#font-color .build}
 > * Find the best estimator for SWOR. 
