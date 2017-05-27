@@ -1,0 +1,31 @@
+---
+title: "Untitled"
+author: "Yin-Ting Chou"
+date: "5/26/2017"
+output: slidy_presentation
+---
+# Data Exploration: Perimeter
+```{r echo=FALSE, message=FALSE, warning=FALSE, results= "asis"}
+library(devtools)
+library(ggplot2)
+library(plotly)
+
+datt=read.csv("/Users/chou/Google Drive/UMN2014-2016/Spring2016/Plan B/final/clean_dat.csv",header=TRUE)
+levels(datt$PMD)=list(P="P",M="M",D="D")
+hist_PMD_a=ggplot(datt, aes(x=Area, color=PMD, fill=PMD))+
+  geom_histogram(aes(y=..density..), alpha=0.5,
+                 position="identity")+
+  geom_density(alpha=.3)
+box_PMD_a=ggplot(datt, aes(x=PMD, y=Area, fill=PMD)) + 
+  geom_boxplot(outlier.shape=NA, outlier.colour = NA) +
+  geom_point(position = position_jitter(h=0,w=0.3))
+
+p1 <- plotly_build(hist_PMD_a)
+p2 <- plotly_build(box_PMD_a)
+
+p = subplot(p1,p2, margin=0.05) 
+
+path <- file.path(getwd(), "/widget/", "area.html")
+htmlwidgets::saveWidget(as_widget(p), file = path)
+```
+<iframe src="widget/area.html" width="800" height="400"></iframe>
